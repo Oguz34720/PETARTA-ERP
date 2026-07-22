@@ -9,8 +9,17 @@ export default function Channels() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const load = () => axios.get(`${API}/api/channels`).then(r => setChannels(r.data));
+  const load = () => {
+    setLoading(true);
+    setError(null);
+    axios.get(`${API}/api/channels`)
+      .then(r => setChannels(r.data))
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  };
   useEffect(() => { load(); }, []);
 
   const save = async () => {
@@ -33,32 +42,41 @@ export default function Channels() {
 
       {msg && <div className="toast-message">{msg}</div>}
       
-      <div className="channels-grid">
-        {channels.map(ch => (
-          <div key={ch.channel} className={`channel-settings-card ${ch.is_active ? 'active' : 'inactive'}`}>
-            <div className="card-header">
-              <span className="card-logo">{CHANNEL_ICONS[ch.channel] || '🔌'}</span>
-              <span className="card-title capitalize">{ch.channel}</span>
-            </div>
-            
-            <div className="card-body">
-              <div className="status-indicator">
-                <span className="status-dot"></span>
-                {ch.is_active ? 'Entegrasyon Aktif' : 'Entegrasyon Devre Dışı'}
+      {loading && <div style={{ textAlign: 'center', padding: '40px', color: '#9fa6bc' }}>⏳ Kanallar yükleniyor...</div>}
+      {error && (
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <p style={{ color: '#ef4444', marginBottom: 12 }}>❌ Bağlantı Hatası: API sunucusuna erişilemedi ({error})</p>
+          <button className="btn-secondary" onClick={load}>Tekrar Dene</button>
+        </div>
+      )}
+      {!loading && !error && (
+        <div className="channels-grid">
+          {channels.map(ch => (
+            <div key={ch.channel} className={`channel-settings-card ${ch.is_active ? 'active' : 'inactive'}`}>
+              <div className="card-header">
+                <span className="card-logo">{CHANNEL_ICONS[ch.channel] || '🔌'}</span>
+                <span className="card-title capitalize">{ch.channel}</span>
               </div>
-              <div className="api-preview">
-                <strong>API Key:</strong> {ch.api_key || <span style={{ color: '#ef4444' }}>Tanımsız</span>}
+              
+              <div className="card-body">
+                <div className="status-indicator">
+                  <span className="status-dot"></span>
+                  {ch.is_active ? 'Entegrasyon Aktif' : 'Entegrasyon Devre Dışı'}
+                </div>
+                <div className="api-preview">
+                  <strong>API Key:</strong> {ch.api_key || <span style={{ color: '#ef4444' }}>Tanımsız</span>}
+                </div>
+              </div>
+              
+              <div className="card-footer">
+                <button className="btn-action-block" onClick={() => { setEditing(ch.channel); setForm({ is_active: ch.is_active, api_key: '', api_secret: '' }); setMsg(''); }}>
+                  ⚙️ Düzenle
+                </button>
               </div>
             </div>
-            
-            <div className="card-footer">
-              <button className="btn-action-block" onClick={() => { setEditing(ch.channel); setForm({ is_active: ch.is_active, api_key: '', api_secret: '' }); setMsg(''); }}>
-                ⚙️ Düzenle
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {editing && (
         <div className="modal-backdrop">
@@ -75,13 +93,13 @@ export default function Channels() {
               </div>
               
               <div className="form-group">
-                <label className="form-label">API Key / Token</label>
-                <input className="form-input" value={form.api_key} onChange={e => setForm(f => ({ ...f, api_key: e.target.value }))} placeholder="Yeni API key girin" />
+                <label htmlFor="channelApiKey" className="form-label">API Key / Token</label>
+                <input id="channelApiKey" name="api_key" className="form-input" value={form.api_key} onChange={e => setForm(f => ({ ...f, api_key: e.target.value }))} placeholder="Yeni API key girin" />
               </div>
               
               <div className="form-group">
-                <label className="form-label">API Secret / Password</label>
-                <input type="password" className="form-input" value={form.api_secret} onChange={e => setForm(f => ({ ...f, api_secret: e.target.value }))} placeholder="Yeni secret girin" />
+                <label htmlFor="channelApiSecret" className="form-label">API Secret / Password</label>
+                <input id="channelApiSecret" name="api_secret" type="password" className="form-input" value={form.api_secret} onChange={e => setForm(f => ({ ...f, api_secret: e.target.value }))} placeholder="Yeni secret girin" />
               </div>
             </div>
             

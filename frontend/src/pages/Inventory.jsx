@@ -111,12 +111,12 @@ export default function Inventory() {
         <h3 className="section-title">Manuel Stok Düzeltme & Yayma</h3>
         <div className="adjust-form">
           <div className="form-group">
-            <label className="form-label">SKU</label>
-            <input className="form-input" value={adjustSku} onChange={e => setAdjustSku(e.target.value)} placeholder="SKU123" />
+            <label htmlFor="adjustSku" className="form-label">SKU</label>
+            <input id="adjustSku" name="adjustSku" className="form-input" value={adjustSku} onChange={e => setAdjustSku(e.target.value)} placeholder="SKU123" />
           </div>
           <div className="form-group">
-            <label className="form-label">Yeni Miktar</label>
-            <input type="number" className="form-input" value={adjustQty} onChange={e => setAdjustQty(e.target.value)} placeholder="50" style={{ width: 120 }} />
+            <label htmlFor="adjustQty" className="form-label">Yeni Miktar</label>
+            <input id="adjustQty" name="adjustQty" type="number" className="form-input" value={adjustQty} onChange={e => setAdjustQty(e.target.value)} placeholder="50" style={{ width: 120 }} />
           </div>
           <button onClick={adjust} className="btn-primary">
             Güncelle & Yay
@@ -216,13 +216,13 @@ export default function Inventory() {
             
             <div className="modal-body">
               <div className="form-group" style={{ marginBottom: 12 }}>
-                <label className="form-label">Ürün Adı</label>
-                <input className="form-input" style={{ width: '100%' }} value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} placeholder="Ürün adını girin" />
+                <label htmlFor="editName" className="form-label">Ürün Adı</label>
+                <input id="editName" name="name" className="form-input" style={{ width: '100%' }} value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} placeholder="Ürün adını girin" />
               </div>
               
               <div className="form-group" style={{ marginBottom: 16 }}>
-                <label className="form-label">Master Stok Adedi (Gerçek Stok)</label>
-                <input type="number" className="form-input" style={{ width: 150 }} value={editForm.master_quantity} onChange={e => setEditForm(f => ({ ...f, master_quantity: parseInt(e.target.value) || 0 }))} />
+                <label htmlFor="editMasterQuantity" className="form-label">Master Stok Adedi (Gerçek Stok)</label>
+                <input id="editMasterQuantity" name="master_quantity" type="number" className="form-input" style={{ width: 150 }} value={editForm.master_quantity} onChange={e => setEditForm(f => ({ ...f, master_quantity: parseInt(e.target.value) || 0 }))} />
               </div>
 
               <h4 className="detail-title" style={{ marginTop: 20, marginBottom: 10, borderBottom: '1px solid var(--border-light)', paddingBottom: 6 }}>Pazaryeri / ERP Entegrasyon Eşleştirmeleri</h4>
@@ -230,10 +230,10 @@ export default function Inventory() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
                 {CHANNELS.map(ch => (
                   <div key={ch.key} className="form-group">
-                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <label htmlFor={`mapping_${ch.key}`} className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span>{ch.icon}</span> {ch.label}
                     </label>
-                    <input className="form-input" style={{ width: '100%', fontSize: 13 }} value={editForm.mapping[ch.key] || ''} onChange={e => handleMappingChange(ch.key, e.target.value)} placeholder="Barcode / Variant ID" />
+                    <input id={`mapping_${ch.key}`} name={ch.key} className="form-input" style={{ width: '100%', fontSize: 13 }} value={editForm.mapping[ch.key] || ''} onChange={e => handleMappingChange(ch.key, e.target.value)} placeholder="Barcode / Variant ID" />
                   </div>
                 ))}
               </div>
