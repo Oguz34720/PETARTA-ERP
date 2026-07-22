@@ -1,0 +1,16 @@
+# Shopify App Configuration
+client_id = "782f50dea3fd0c444d16e14b74928102"
+name = "Unified Commerce Hub"
+handle = "unified-commerce-hub"
+type = "custom"
+application_url = "http://localhost:3000"
+
+[webhooks]
+api_version = "2026-07"
+
+[[webhooks.subscriptions]]
+topics = [ "orders/create", "orders/paid" ]
+uri = "http://localhost:3001/webhooks/shopify"
+
+[pos]
+embedded = true

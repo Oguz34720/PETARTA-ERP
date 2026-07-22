@@ -1,0 +1,31 @@
+# Dependency directories
+node_modules/
+
+# Local env files (highly critical for security)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# SQLite Database
+*.sqlite
+*.sqlite-journal
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
