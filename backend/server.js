@@ -13,6 +13,7 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/channels', require('./routes/channels'));
 app.use('/api/sync-logs', require('./routes/syncLogs'));
 app.use('/api/invoices', require('./routes/invoices'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/webhooks', require('./routes/webhooks'));
 
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));

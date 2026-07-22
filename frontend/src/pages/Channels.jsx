@@ -20,7 +20,14 @@ export default function Channels() {
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('auth_success') === 'shopify') {
+      setMsg('🎉 Shopify mağazanız başarıyla bağlandı ve yetkilendirildi!');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const save = async () => {
     try {
@@ -87,6 +94,36 @@ export default function Channels() {
             </div>
             
             <div className="modal-body">
+              {editing === 'shopify' && (
+                <div style={{ padding: 12, backgroundColor: 'rgba(59, 130, 246, 0.1)', borderRadius: 8, marginBottom: 16, border: '1px dashed #3b82f6' }}>
+                  <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#60a5fa' }}>⚡ Otomatik Shopify Bağlantısı</h4>
+                  <p style={{ margin: '0 0 12px 0', fontSize: 12, color: '#9fa6bc' }}>Mağazanızı tek tıkla bağlamak için myshopify alan adınızı yazın ve "Bağlan"a tıklayın.</p>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      style={{ flex: 1, fontSize: 13 }} 
+                      id="shopifyShopInput"
+                      name="shopify_shop"
+                      placeholder="petarya.myshopify.com" 
+                      value={form.shopify_shop || ''} 
+                      onChange={e => setForm(f => ({ ...f, shopify_shop: e.target.value }))} 
+                    />
+                    <button 
+                      type="button" 
+                      className="btn-primary" 
+                      style={{ padding: '0 16px', fontSize: 13, height: 38 }}
+                      onClick={() => {
+                        const shop = form.shopify_shop || 'petarya.myshopify.com';
+                        window.location.href = `${API}/api/auth/shopify?shop=${shop}&redirect_host=${window.location.origin}/channels`;
+                      }}
+                    >
+                      Bağlan
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="form-group-checkbox">
                 <input type="checkbox" id="active-checkbox" checked={form.is_active} onChange={e => setForm(f => ({ ...f, is_active: e.target.checked }))} />
                 <label htmlFor="active-checkbox">Bu kanalı aktifleştir ve veri senkronizasyonunu başlat</label>
