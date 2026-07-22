@@ -105,7 +105,7 @@ export default function Channels() {
                       style={{ flex: 1, fontSize: 13 }} 
                       id="shopifyShopInput"
                       name="shopify_shop"
-                      placeholder="petarya.myshopify.com" 
+                      placeholder="h1yrck-ch.myshopify.com" 
                       value={form.shopify_shop || ''} 
                       onChange={e => setForm(f => ({ ...f, shopify_shop: e.target.value }))} 
                     />
@@ -114,7 +114,7 @@ export default function Channels() {
                       className="btn-primary" 
                       style={{ padding: '0 16px', fontSize: 13, height: 38 }}
                       onClick={() => {
-                        const shop = form.shopify_shop || 'petarya.myshopify.com';
+                        const shop = form.shopify_shop || 'h1yrck-ch.myshopify.com';
                         window.location.href = `${API}/api/auth/shopify?shop=${shop}&redirect_host=${window.location.origin}/channels`;
                       }}
                     >
