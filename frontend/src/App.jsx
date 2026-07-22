@@ -7,6 +7,10 @@ import Channels from './pages/Channels';
 import SyncLog from './pages/SyncLog';
 import './index.css';
 
+import { useEffect } from 'react';
+import axios from 'axios';
+import { API } from './config';
+
 const NAV = [
   { to: '/', label: '📊 Dashboard' },
   { to: '/inventory', label: '📦 Stok' },
@@ -17,6 +21,22 @@ const NAV = [
 ];
 
 export default function App() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shop = params.get('shop');
+    
+    if (shop) {
+      axios.get(`${API}/api/channels`)
+        .then(res => {
+          const shopifyChannel = res.data.find(c => c.channel === 'shopify');
+          if (!shopifyChannel || !shopifyChannel.is_active) {
+            window.location.href = `${API}/api/auth/shopify?shop=${shop}&redirect_host=${window.location.origin}`;
+          }
+        })
+        .catch(err => console.error('Failed to check channel status:', err));
+    }
+  }, []);
+
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="app-container">
